@@ -97,7 +97,13 @@ now -- there's no automated refresh job.
 A GitHub Actions workflow (`.github/workflows/docker-build.yml`) builds and
 pushes the image to GHCR (`ghcr.io/ryanscharf/usl-gplus-bot:latest`) on
 every push to `main`. On the TrueNAS box, run it via [`docker-compose.yml`](docker-compose.yml)
-(works as-is in [Dockge](https://github.com/louislam/dockge)):
+in [Dockge](https://github.com/louislam/dockge): add it as a stack, paste
+the compose file in, then set `BSKY_HANDLE`/`BSKY_APP_PASSWORD` (and
+optionally `POLL_INTERVAL_SECONDS`/`DB_PATH`) in Dockge's environment
+variables tab -- the compose file reads them via `${VAR}` substitution, so
+whatever Dockge writes to the stack's `.env` just works.
+
+Outside Dockge, it's an ordinary compose file:
 
 ```sh
 cp .env.example .env

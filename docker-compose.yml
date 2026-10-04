@@ -3,7 +3,10 @@ services:
     image: ghcr.io/ryanscharf/usl-gplus-bot:latest
     container_name: usl-gplus-bot
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      BSKY_HANDLE: ${BSKY_HANDLE}
+      BSKY_APP_PASSWORD: ${BSKY_APP_PASSWORD}
+      POLL_INTERVAL_SECONDS: ${POLL_INTERVAL_SECONDS:-1200}
+      DB_PATH: ${DB_PATH:-data/state.duckdb}
     volumes:
       - ./data:/app/data
