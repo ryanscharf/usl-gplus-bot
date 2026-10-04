@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfribidi-dev \
     libfreetype6-dev \
     libpng-dev \
-    libtiff5-dev \
+    libtiff-dev \
     libjpeg-dev \
     chromium \
     && rm -rf /var/lib/apt/lists/*
