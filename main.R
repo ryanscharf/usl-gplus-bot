@@ -4,7 +4,9 @@
 #' timing signal, then independently builds and posts the USL Super League
 #' equivalent using itscalledsoccer data.
 
-dotenv::load_dot_env(".env")
+if (file.exists(".env")) {
+  dotenv::load_dot_env(".env")
+}
 
 for (f in list.files("R", pattern = "\\.R$", full.names = TRUE)) {
   source(f)
