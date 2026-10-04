@@ -4,5 +4,3 @@ data/
 .Rproj.user/
 .Rhistory
 .RData
-renv/library/
-renv/staging/

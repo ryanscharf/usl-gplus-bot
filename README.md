@@ -26,12 +26,12 @@ cp .env.example .env
 # https://bsky.app/settings/app-passwords -- do not use your main password)
 ```
 
-Generate the `renv.lock` once locally before the first Docker build:
+Install dependencies (uses [pak](https://pak.r-lib.org/), pulling binaries
+from CRAN where available for your R version/OS):
 
 ```r
-install.packages("renv")
-renv::init()
-renv::snapshot()
+install.packages("pak")
+pak::local_install_deps(dependencies = TRUE)
 ```
 
 Run locally:
