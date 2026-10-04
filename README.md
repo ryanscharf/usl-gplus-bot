@@ -95,7 +95,17 @@ now -- there's no automated refresh job.
 ## Deployment
 
 A GitHub Actions workflow (`.github/workflows/docker-build.yml`) builds and
-pushes the image to GHCR (`ghcr.io/<owner>/<repo>:latest`) on every push to
-`main`. On the TrueNAS box, pull and run it as a long-lived container with a
-persistent volume mounted at `/app/data` (holds the DuckDB dedupe state) and
-the `.env` variables supplied as container environment variables.
+pushes the image to GHCR (`ghcr.io/ryanscharf/usl-gplus-bot:latest`) on
+every push to `main`. On the TrueNAS box, run it via [`docker-compose.yml`](docker-compose.yml)
+(works as-is in [Dockge](https://github.com/louislam/dockge)):
+
+```sh
+cp .env.example .env
+# fill in BSKY_HANDLE / BSKY_APP_PASSWORD
+docker compose up -d
+```
+
+`./data` on the host persists the DuckDB dedupe state across container
+restarts/image updates (mounted to `/app/data`, matching `DB_PATH`'s
+default in `.env.example`). To pick up a new image after a push to `main`,
+`docker compose pull && docker compose up -d`.

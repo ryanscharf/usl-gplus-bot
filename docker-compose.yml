@@ -1,0 +1,9 @@
+services:
+  usl-gplus-bot:
+    image: ghcr.io/ryanscharf/usl-gplus-bot:latest
+    container_name: usl-gplus-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
