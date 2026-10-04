@@ -129,3 +129,29 @@ Review the printed match summary before trusting the result, especially any
 `fuzzy_both` or `last_name_exact_first_tiebreak` matches -- re-run with
 `DBI::dbGetQuery()` against the new parquet, or just regenerate a test image
 (see the project's test workflow) and eyeball a few rows.
+
+## Known gaps (as of 2026-10-04)
+
+173/183 scraped photos are matched. The remaining 10 scraped players likely
+haven't recorded enough ASA-tracked actions to show up in `get_players()`
+yet -- probably very recent signings or academy call-ups:
+
+| Team | Scraped name |
+|---|---|
+| DAL | Heather MacNab |
+| DAL | Ro Reed |
+| DC | Ellie Gilbert |
+| FTL | Jules Cagle |
+| JAX | Amanda Poorbaugh |
+| LEX | Bridget Kopmeyer |
+| TB | Addison Jericho |
+| TB | Jaeda Russell |
+| TB | Kallie Bleistein |
+| TB | Millie Ravening |
+
+Plus one 2026-season ASA player with no scraped photo at all (not found on
+the team's roster page when last scraped, or listed under a different
+name): **Meila Brewer** (DAL).
+
+Worth re-checking next time `scripts/update_headshots.R` is re-run -- ASA's
+data may have caught up with these players by then.

@@ -100,7 +100,15 @@ all_players$norm <- normalize_name(all_players$player_name)
 manual_overrides <- list(
   "DAL|jasmine hamid" = "ishata hamid", # user-confirmed: same player, goes by both names
   "BKN|annie williams arlington" = "antoinette williams", # shared surname, hyphenated/nickname variant
-  "DC|loza abera" = "loza geinore" # rare first name match, likely maiden/married name difference
+  "DC|loza abera" = "loza geinore", # rare first name match, likely maiden/married name difference
+  "TB|tori zierenberg" = "tori waldeck", # user-confirmed: same player, goes by both names
+  "CAR|riley parker" = "riley mattingly", # user-confirmed: same player, goes by both names
+  "CAR|audrey coleman" = "audrey harding", # user-confirmed: same player, goes by both names
+  "DAL|sofia cedeno" = "sofia caicedo", # user-confirmed: same player, goes by both names
+  "DC|samantha angel" = "samantha cary", # user-confirmed: same player, goes by both names
+  "DC|sarah mccoy" = "sarah clark", # user-confirmed: same player, goes by both names
+  "DC|susanna fitch" = "susanna friedrichs", # user-confirmed: same player, goes by both names
+  "FTL|kelli van treeck" = "kelli beiler" # user-confirmed: same player, goes by both names
 )
 # Players who moved teams mid-season: ASA's most-recent-team resolution can
 # lag the team site's current roster -- match by name across all teams.
