@@ -1,0 +1,22 @@
+Package: usl.gplus.bot
+Title: USL Super League Goals Added (g+) and xG Leaders Bluesky Bot
+Version: 0.1.0
+Description: Watches American Soccer Analysis's Bluesky account for their
+    NWSL Goals Added (g+) and xG leaders post as a timing signal, then
+    independently builds and posts the USL Super League equivalent using
+    itscalledsoccer data.
+License: MIT
+Encoding: UTF-8
+Imports:
+    atrrr,
+    itscalledsoccer,
+    gt,
+    webshot2,
+    duckdb,
+    DBI,
+    dotenv,
+    glue
+Suggests:
+    testthat (>= 3.0.0),
+    magick
+Config/testthat/edition: 3
