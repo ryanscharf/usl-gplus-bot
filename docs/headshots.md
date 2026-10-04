@@ -91,21 +91,28 @@ This:
    source image filename was literally `Juliet-LJ-Moore.png`). A
    first-name-only coincidence across *different* last names is
    deliberately rejected (e.g. "Audrey Coleman" vs. ASA's "Audrey
-   Harding" -- different people). This matters because ASA's roster is
-   incomplete (only players with at least one recorded action), so a
-   blanket fuzzy-match threshold would regularly produce confident-looking
-   wrong matches for players ASA hasn't picked up yet.
-3. A short list of `manual_overrides`/`cross_team` cases at the top of the
+   Harding" -- different people). This matters because the stats-endpoint
+   roster (used for this team-scoped pass) is incomplete -- only players
+   with at least one recorded action -- so a blanket fuzzy-match threshold
+   would regularly produce confident-looking wrong matches for players ASA
+   hasn't recorded stats for yet.
+3. For anyone still unmatched (no stats-endpoint record at all), falls
+   back to an **exact**-name-only match against `get_players()` -- ASA's
+   full player list for the league (hundreds of rows, vs. ~150 in the
+   stats endpoints), which includes zero-action players but has no
+   `team_id` to cross-check against. Exact match only here, never fuzzy,
+   since there's no team signal to disambiguate a near-miss.
+4. A short list of `manual_overrides`/`cross_team` cases at the top of the
    script covers judgment calls no algorithm can infer (e.g. a player who
    goes by two different first names across sources, confirmed by a
    human). Add to these as new ones turn up -- don't loosen the matching
    thresholds instead, since that's what causes wrong-player mismatches.
-4. Square-crops every image (biased 15% toward the top for portrait
+5. Square-crops every image (biased 15% toward the top for portrait
    sources, to avoid cutting off foreheads), resizes to 300x300, and
    compresses to JPEG quality 85 -- these render at ~130px in the final
    table, so there's no reason to keep multi-megapixel originals (this
    step alone took the asset size from ~100MB to ~3MB last time).
-5. Packs **every** scraped photo -- matched or not -- into
+6. Packs **every** scraped photo -- matched or not -- into
    `assets/headshots.parquet`, overwriting it. Unmatched photos are kept
    (`player_id` is `NULL`) rather than discarded, so a future re-run can
    wire them up once that player appears in ASA's data, without

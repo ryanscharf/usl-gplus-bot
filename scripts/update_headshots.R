@@ -49,6 +49,14 @@ teams <- client$get_teams(leagues = LEAGUE)
 roster <- merge(ids, players[, c("player_id", "player_name")], by = "player_id")
 roster <- merge(roster, teams[, c("team_id", "team_abbreviation")], by = "team_id")
 
+# get_players() is the FULL player list ASA has on record for this league
+# (429 rows, vs. 154 in the stats endpoints above) -- it includes players
+# who haven't recorded a single tracked action yet, just without a team_id
+# (that only comes from the stats endpoints). Used as a second-pass,
+# exact-name-only fallback below for players the team-scoped match above
+# can't place.
+all_players <- players
+
 # --- 2. Name matching, prioritizing last-name accuracy. ---
 #
 # ASA's roster is incomplete (only players who've recorded at least one
@@ -84,6 +92,7 @@ scraped$last <- vapply(scraped$norm, last_name, character(1))
 roster$last <- vapply(roster$norm, last_name, character(1))
 scraped$first <- vapply(scraped$norm, first_name, character(1))
 roster$first <- vapply(roster$norm, first_name, character(1))
+all_players$norm <- normalize_name(all_players$player_name)
 
 # Judgment calls no algorithm can infer -- add to these as new ones turn up.
 # Keys are "<team_abbr>|<normalized scraped name>", values are the
@@ -146,6 +155,16 @@ match_one <- function(row) {
     if (last_dists[best] <= 2 && min(first_dists) <= 2) {
       return(data.frame(player_id = candidates$player_id[best], asa_player_name = candidates$player_name[best], method = "fuzzy_both"))
     }
+  }
+
+  # Last resort: no team-scoped candidate at all (player has zero recorded
+  # 2026 actions, so they're absent from the stats-endpoint roster entirely)
+  # -- fall back to an EXACT name match against ASA's full player list
+  # (get_players(), which has no team_id but is far more complete). Exact
+  # name only, no fuzzy matching, since we can't cross-check team here.
+  full_exact <- all_players[all_players$norm == row$norm, ]
+  if (nrow(full_exact) == 1) {
+    return(data.frame(player_id = full_exact$player_id, asa_player_name = full_exact$player_name, method = "full_roster_exact"))
   }
 
   data.frame(player_id = NA_character_, asa_player_name = NA_character_, method = "unmatched")

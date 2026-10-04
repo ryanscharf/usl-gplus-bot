@@ -17,7 +17,7 @@ post_leaders <- function(handle = Sys.getenv("BSKY_HANDLE")) {
   )
 
   text <- glue::glue(
-    "USL Super League Goals Added (g+) and xG Leaders ⬇️\n(as of: {as_of_date})\n\n\U0001F916⚽️ | #usls"
+    "USL Super League Goals Added (g+) and xG Leaders ⬇️\n(as of: {as_of_date})\n\n\U0001F916⚽️ | #usls #gsl"
   )
 
   atrrr::post_skeet(

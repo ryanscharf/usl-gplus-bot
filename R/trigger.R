@@ -2,8 +2,7 @@
 #'
 #' USL Super League is also a women's league, so its matchweek cadence
 #' tracks NWSL's more closely than MLS's -- we use ASA's NWSL leaders post
-#' as the timing signal for publishing our own USL Super League version,
-#' not as content to copy.
+#' as the timing signal for publishing our own USL Super League version.
 
 #' @param text A Bluesky post's text.
 #' @return TRUE if this looks like ASA's NWSL g+/xG leaders post.
