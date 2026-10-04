@@ -34,24 +34,42 @@ check_for_trigger <- function(con, on_trigger, actor = "americansocceranalysis.c
 
   matches <- feed[vapply(feed$text, is_nwsl_leaders_post, logical(1)), ]
 
-  for (i in seq_len(nrow(matches))) {
-    post <- matches[i, ]
+  if (nrow(matches) == 0) {
+    return(invisible(NULL))
+  }
 
-    if (has_handled(con, post$uri)) {
-      next
+  # Only the most recent leaders post is a timing signal; older ones in the
+  # feed window are stale and get recorded without posting.
+  matches <- matches[order(matches$indexed_at, decreasing = TRUE), ]
+  post <- matches[1, ]
+
+  for (i in seq_len(nrow(matches))[-1]) {
+    if (!has_handled(con, matches$uri[i])) {
+      mark_handled(con, matches$uri[i], as.character(matches$indexed_at[i]))
     }
+  }
 
-    tryCatch(
-      {
-        on_trigger(post)
-        mark_handled(con, post$uri, as.character(post$created_at))
-      },
-      error = function(e) {
-        message(glue::glue(
-          "[trigger] failed to handle {post$uri}: {conditionMessage(e)} (will retry next cycle)"
-        ))
-      }
-    )
+  if (has_handled(con, post$uri)) {
+    return(invisible(NULL))
+  }
+
+  posted <- tryCatch(
+    {
+      on_trigger(post)
+      TRUE
+    },
+    error = function(e) {
+      message(glue::glue(
+        "[trigger] failed to handle {post$uri}: {conditionMessage(e)} (will retry next cycle)"
+      ))
+      FALSE
+    }
+  )
+
+  # Kept outside the retry tryCatch: once we've posted, a failure to record
+  # it must not be treated as "retry", or we'd post again next cycle.
+  if (posted) {
+    mark_handled(con, post$uri, as.character(post$indexed_at))
   }
 
   invisible(NULL)

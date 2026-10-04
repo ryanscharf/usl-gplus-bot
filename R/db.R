@@ -25,6 +25,12 @@ has_handled <- function(con, source_uri) {
 }
 
 mark_handled <- function(con, source_uri, source_created_at) {
+  # A zero-length value here makes DuckDB's bind fail, which previously left
+  # posts unrecorded and caused reposts every cycle.
+  if (length(source_created_at) != 1) {
+    source_created_at <- NA_character_
+  }
+
   DBI::dbExecute(
     con,
     "INSERT INTO handled_triggers (source_uri, source_created_at, handled_at) VALUES (?, ?, ?)",
